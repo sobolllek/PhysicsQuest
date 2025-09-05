@@ -1,23 +1,63 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { TabNavigation } from "@/components/layout/tab-navigation"
 import MainScreen from "./MainScreen"
 import TheoryScreen from "./TheoryScreen"
 import AchievementsScreen from "./AchievementsScreen"
 import ProfileScreen from "./ProfileScreen"
+import { LevelScreen } from "@/components/level/LevelScreen"
 import { toast } from "@/hooks/use-toast"
+import { initTelegram } from "@/lib/telegram"
+import { LevelData } from "@/types/level"
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('main')
+  const [currentLevel, setCurrentLevel] = useState<LevelData | null>(null)
 
-  const handleLevelClick = (levelId: number) => {
+  useEffect(() => {
+    // Initialize Telegram Web App
+    initTelegram()
+  }, [])
+
+  const handleLevelClick = async (levelId: number) => {
+    try {
+      // Load level data from JSON
+      const levelModule = await import(`@/data/mechanics/level_${levelId}.json`)
+      setCurrentLevel(levelModule.default)
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: "Не удалось загрузить уровень",
+        variant: "destructive"
+      })
+    }
+  }
+
+  const handleLevelComplete = (score: number) => {
     toast({
-      title: "Уровень выбран",
-      description: `Готовимся к прохождению уровня ${levelId}`,
+      title: "Уровень завершен!",
+      description: `Результат: ${score}%`,
     })
-    // TODO: Navigate to level screen
+    setCurrentLevel(null)
+    setActiveTab('main')
+  }
+
+  const handleBackFromLevel = () => {
+    setCurrentLevel(null)
   }
 
   const renderScreen = () => {
+    // If level is selected, show level screen
+    if (currentLevel) {
+      return (
+        <LevelScreen 
+          levelData={currentLevel}
+          onBack={handleBackFromLevel}
+          onComplete={handleLevelComplete}
+        />
+      )
+    }
+
+    // Otherwise show tab content
     switch (activeTab) {
       case 'main':
         return <MainScreen onLevelClick={handleLevelClick} />
@@ -35,7 +75,10 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {renderScreen()}
-      <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
+      {/* Hide tab navigation when in level */}
+      {!currentLevel && (
+        <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
+      )}
     </div>
   );
 };
