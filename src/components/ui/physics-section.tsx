@@ -65,16 +65,16 @@ export function PhysicsSection({
             </pattern>
           </defs>
           
-          {/* Winding path connecting all levels */}
+          {/* Winding S-curve path connecting all levels */}
           <path
-            d="M150,60 Q220,100 150,140 Q80,180 150,220 Q220,260 150,300 Q80,340 150,380 Q220,420 150,460 Q80,500 150,540"
+            d="M150,50 C200,80 200,120 150,150 C100,180 100,220 150,250 C200,280 200,320 150,350 C100,380 100,420 150,450 C200,480 200,520 150,550"
             stroke={`url(#dots-${title.replace(/\s+/g, '-')})`}
-            strokeWidth="3"
-            strokeDasharray="12,8"
+            strokeWidth="4"
+            strokeDasharray="8,6"
             fill="none"
             className="animate-pulse"
             style={{ 
-              animation: 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              animation: 'pulse 4s ease-in-out infinite',
               strokeLinecap: 'round'
             }}
           />
