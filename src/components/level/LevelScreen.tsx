@@ -117,21 +117,14 @@ export function LevelScreen({ levelData, onBack, onComplete }: LevelScreenProps)
   }
 
   return (
-    <div className="min-h-screen bg-gradient-space">
+    <div className="h-full bg-gradient-space overflow-y-auto">
       {/* Header */}
       <div className="sticky top-0 bg-card/80 backdrop-blur-lg border-b border-border z-50">
-        <div className="flex items-center justify-between p-4">
-          <Button variant="ghost" size="sm" onClick={onBack}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Назад
-          </Button>
-          
+        <div className="flex items-center justify-center p-4">
           <div className="text-center">
             <h1 className="font-bold text-foreground">{levelData.title}</h1>
             <p className="text-sm text-muted-foreground">{currentStep.title}</p>
           </div>
-
-          <div className="w-16" /> {/* Spacer */}
         </div>
 
         {/* Progress bar */}

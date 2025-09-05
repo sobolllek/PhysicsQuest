@@ -9,10 +9,18 @@ interface Level {
   isCurrent?: boolean
 }
 
+interface LevelProgress {
+  theory: boolean
+  practice: boolean
+  validation: boolean
+  controlTest: boolean
+}
+
 interface PhysicsSectionProps {
   title: string
   icon: React.ReactNode
   levels: Level[]
+  levelProgress: { [levelId: number]: LevelProgress }
   onLevelClick: (levelId: number) => void
   className?: string
 }
@@ -21,6 +29,7 @@ export function PhysicsSection({
   title, 
   icon, 
   levels, 
+  levelProgress,
   onLevelClick,
   className 
 }: PhysicsSectionProps) {
@@ -71,14 +80,15 @@ export function PhysicsSection({
         {/* Levels */}
         <div className="flex flex-col items-center space-y-8">
           {levels.map((level) => (
-            <LevelNode
-              key={level.id}
-              title={level.title}
-              isUnlocked={level.isUnlocked}
-              isCompleted={level.isCompleted}
-              isCurrent={level.isCurrent}
-              onClick={() => onLevelClick(level.id)}
-            />
+              <LevelNode
+                key={level.id}
+                title={level.title}
+                isUnlocked={level.isUnlocked}
+                isCompleted={level.isCompleted}
+                isCurrent={level.isCurrent}
+                progress={levelProgress[level.id]}
+                onClick={() => onLevelClick(level.id)}
+              />
           ))}
         </div>
       </div>

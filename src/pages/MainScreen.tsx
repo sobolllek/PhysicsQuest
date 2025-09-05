@@ -12,11 +12,12 @@ const sectionIcons = {
 
 interface MainScreenProps {
   onLevelClick: (levelId: number) => void
+  levelProgress: { [levelId: number]: any }
 }
 
-export default function MainScreen({ onLevelClick }: MainScreenProps) {
+export default function MainScreen({ onLevelClick, levelProgress }: MainScreenProps) {
   return (
-    <div className="min-h-screen bg-gradient-space pb-20">
+    <div className="h-full bg-gradient-space overflow-y-auto pb-20">
       {/* Header */}
       <div className="relative pt-12 pb-8 text-center">
         <div className="absolute inset-0 bg-gradient-cosmic opacity-20" />
@@ -38,6 +39,7 @@ export default function MainScreen({ onLevelClick }: MainScreenProps) {
             title={section.title}
             icon={sectionIcons[section.id as keyof typeof sectionIcons]}
             levels={section.levels}
+            levelProgress={levelProgress}
             onLevelClick={onLevelClick}
           />
         ))}

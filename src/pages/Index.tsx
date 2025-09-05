@@ -12,6 +12,10 @@ import { LevelData } from "@/types/level"
 const Index = () => {
   const [activeTab, setActiveTab] = useState('main')
   const [currentLevel, setCurrentLevel] = useState<LevelData | null>(null)
+  const [levelProgress, setLevelProgress] = useState<{ [levelId: number]: any }>({
+    1: { theory: true, practice: false, validation: false, controlTest: false },
+    2: { theory: false, practice: false, validation: false, controlTest: false }
+  })
 
   useEffect(() => {
     // Initialize Telegram Web App
@@ -60,7 +64,7 @@ const Index = () => {
     // Otherwise show tab content
     switch (activeTab) {
       case 'main':
-        return <MainScreen onLevelClick={handleLevelClick} />
+        return <MainScreen onLevelClick={handleLevelClick} levelProgress={levelProgress} />
       case 'theory':
         return <TheoryScreen />
       case 'achievements':
@@ -68,12 +72,12 @@ const Index = () => {
       case 'profile':
         return <ProfileScreen />
       default:
-        return <MainScreen onLevelClick={handleLevelClick} />
+        return <MainScreen onLevelClick={handleLevelClick} levelProgress={levelProgress} />
     }
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="h-full bg-background">
       {renderScreen()}
       {/* Hide tab navigation when in level */}
       {!currentLevel && (

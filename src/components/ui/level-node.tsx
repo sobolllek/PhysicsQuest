@@ -1,11 +1,19 @@
 import { cn } from "@/lib/utils"
-import { Lock, CheckCircle2, Play } from "lucide-react"
+import { Lock, CheckCircle2, Play, Check, X } from "lucide-react"
+
+interface LevelProgress {
+  theory: boolean
+  practice: boolean
+  validation: boolean
+  controlTest: boolean
+}
 
 interface LevelNodeProps {
   title: string
   isUnlocked: boolean
   isCompleted: boolean
   isCurrent?: boolean
+  progress?: LevelProgress
   onClick?: () => void
   className?: string
 }
@@ -15,9 +23,12 @@ export function LevelNode({
   isUnlocked, 
   isCompleted, 
   isCurrent = false,
+  progress,
   onClick,
   className 
 }: LevelNodeProps) {
+  const hasProgress = progress && (progress.theory || progress.practice || progress.validation || progress.controlTest)
+
   return (
     <div className={cn("relative group", className)}>
       <button
@@ -69,6 +80,35 @@ export function LevelNode({
           {title}
         </p>
       </div>
+
+      {/* Progress indicator */}
+      {hasProgress && !isCompleted && (
+        <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-card/90 backdrop-blur-sm rounded-lg p-2 shadow-lg border border-border min-w-32 z-10">
+          <div className="space-y-1 text-xs">
+            <div className="flex items-center justify-between">
+              <span>Теория</span>
+              {progress.theory ? 
+                <Check className="w-3 h-3 text-success" /> : 
+                <X className="w-3 h-3 text-destructive" />
+              }
+            </div>
+            <div className="flex items-center justify-between">
+              <span>Практика</span>
+              {progress.practice ? 
+                <Check className="w-3 h-3 text-success" /> : 
+                <X className="w-3 h-3 text-destructive" />
+              }
+            </div>
+            <div className="flex items-center justify-between">
+              <span>Контроль</span>
+              {progress.controlTest ? 
+                <Check className="w-3 h-3 text-success" /> : 
+                <X className="w-3 h-3 text-destructive" />
+              }
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
