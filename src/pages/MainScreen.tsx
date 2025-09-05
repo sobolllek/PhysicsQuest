@@ -31,18 +31,52 @@ export default function MainScreen({ onLevelClick, levelProgress }: MainScreenPr
         </div>
       </div>
 
-      {/* Physics Sections */}
-      <div className="px-6 space-y-12">
-        {physicsSections.map((section) => (
-          <PhysicsSection
-            key={section.id}
-            title={section.title}
-            icon={sectionIcons[section.id as keyof typeof sectionIcons]}
-            levels={section.levels}
-            levelProgress={levelProgress}
-            onLevelClick={onLevelClick}
-          />
-        ))}
+      {/* Physics Sections - Diamond Layout */}
+      <div className="px-6">
+        {/* Row 1 - Center section */}
+        <div className="flex justify-center mb-12">
+          {physicsSections.slice(0, 1).map((section) => (
+            <div key={section.id} className="w-80">
+              <PhysicsSection
+                title={section.title}
+                icon={sectionIcons[section.id as keyof typeof sectionIcons]}
+                levels={section.levels}
+                levelProgress={levelProgress}
+                onLevelClick={onLevelClick}
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* Row 2 - Two sections side by side */}
+        <div className="flex justify-center gap-8 mb-12">
+          {physicsSections.slice(1, 3).map((section) => (
+            <div key={section.id} className="w-80">
+              <PhysicsSection
+                title={section.title}
+                icon={sectionIcons[section.id as keyof typeof sectionIcons]}
+                levels={section.levels}
+                levelProgress={levelProgress}
+                onLevelClick={onLevelClick}
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* Row 3 - Two sections side by side */}
+        <div className="flex justify-center gap-8 mb-12">
+          {physicsSections.slice(3, 5).map((section) => (
+            <div key={section.id} className="w-80">
+              <PhysicsSection
+                title={section.title}
+                icon={sectionIcons[section.id as keyof typeof sectionIcons]}
+                levels={section.levels}
+                levelProgress={levelProgress}
+                onLevelClick={onLevelClick}
+              />
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Bottom padding for tab navigation */}
