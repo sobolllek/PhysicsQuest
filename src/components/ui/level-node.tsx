@@ -2,8 +2,14 @@ import { cn } from "@/lib/utils"
 import { Check, X } from "lucide-react"
 import { useState } from "react"
 
+interface SubtopicProgress {
+  title: string
+  completed: boolean
+}
+
 interface LevelProgress {
   theory: boolean
+  subtopics?: SubtopicProgress[]
   practice: boolean
   validation: boolean
   controlTest: boolean
@@ -137,12 +143,25 @@ export function LevelNode({
 
       {/* Progress popup */}
       {hasProgress && !isCompleted && (
-        <div className="absolute -bottom-20 left-1/2 transform -translate-x-1/2 bg-card/90 backdrop-blur-sm rounded-lg p-2 shadow-lg border border-border min-w-32 z-50">
+        <div className="absolute -bottom-20 left-1/2 transform -translate-x-1/2 bg-card/90 backdrop-blur-sm rounded-lg p-2 shadow-lg border border-border min-w-40 z-50">
           <div className="space-y-1 text-xs">
-            <div className="flex items-center justify-between">
-              <span>Теория</span>
-              {progress.theory ? <Check className="w-3 h-3 text-success" /> : <X className="w-3 h-3 text-destructive" />}
-            </div>
+            {progress.subtopics && progress.subtopics.length > 0 ? (
+              // Показываем подтемы теории
+              <>
+                {progress.subtopics.map((subtopic, index) => (
+                  <div key={index} className="flex items-center justify-between">
+                    <span className="truncate">{subtopic.title}</span>
+                    {subtopic.completed ? <Check className="w-3 h-3 text-success" /> : <X className="w-3 h-3 text-destructive" />}
+                  </div>
+                ))}
+              </>
+            ) : (
+              // Показываем обычную теорию
+              <div className="flex items-center justify-between">
+                <span>Теория</span>
+                {progress.theory ? <Check className="w-3 h-3 text-success" /> : <X className="w-3 h-3 text-destructive" />}
+              </div>
+            )}
             <div className="flex items-center justify-between">
               <span>Практика</span>
               {progress.practice ? <Check className="w-3 h-3 text-success" /> : <X className="w-3 h-3 text-destructive" />}

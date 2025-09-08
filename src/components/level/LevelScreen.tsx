@@ -73,6 +73,7 @@ export function LevelScreen({ levelData, onBack, onComplete }: LevelScreenProps)
     levelId: levelData.id,
     currentStep: 0,
     stepScores: {},
+    subtopicsProgress: {},
     completed: false,
     attempts: 0
   })
@@ -136,7 +137,7 @@ export function LevelScreen({ levelData, onBack, onComplete }: LevelScreenProps)
         return (
           <TheoryStep 
             step={currentStep} 
-            onComplete={() => handleStepComplete(currentStep.id, 100)}
+            onComplete={(score) => handleStepComplete(currentStep.id, score)}
           />
         )
       case 'practice':

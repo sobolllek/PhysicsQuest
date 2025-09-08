@@ -1,17 +1,28 @@
 import { Button } from "@/components/ui/button"
 import { LevelStep } from "@/types/level"
+import { TheorySubtopicStep } from "./TheorySubtopicStep"
 import { hapticFeedback } from "@/lib/telegram"
 
 interface TheoryStepProps {
   step: LevelStep
-  onComplete: () => void
+  onComplete: (score: number) => void
 }
 
 export function TheoryStep({ step, onComplete }: TheoryStepProps) {
+  // Если есть подтемы, используем новый компонент
+  if (step.subtopics && step.subtopics.length > 0) {
+    return (
+      <TheorySubtopicStep
+        subtopics={step.subtopics}
+        training={step.training}
+        onComplete={onComplete}
+      />
+    )
+  }
 
   const handleContinue = () => {
     hapticFeedback('selection')
-    onComplete()
+    onComplete(100)
   }
 
   return (
