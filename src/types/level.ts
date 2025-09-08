@@ -8,16 +8,17 @@ export interface Question {
   hints?: string[]
 }
 
-export interface TheorySubtopic {
-  id: string
-  title: string
-  content: string
-}
-
 export interface TrainingQuestions {
   id: string
   questions: Question[]
   passScore?: number // процент для прохождения тренировки (по умолчанию 80%)
+}
+
+export interface TheorySubtopic {
+  id: string
+  title: string
+  content: string
+  training: TrainingQuestions // каждый подтопик имеет свою тренировку
 }
 
 export interface LevelStep {
@@ -26,7 +27,6 @@ export interface LevelStep {
   title: string
   content?: string
   subtopics?: TheorySubtopic[] // для теории с подтемами
-  training?: TrainingQuestions // тренировка после теории
   questions?: Question[]
   timeLimit?: number // в секундах для контрольного теста
   passScore?: number // процент для прохождения (80% для практики, 70% для контроля)
@@ -47,7 +47,8 @@ export interface LevelData {
 
 export interface SubtopicProgress {
   subtopicId: string
-  completed: boolean
+  theoryCompleted: boolean
+  trainingCompleted: boolean
   trainingScore?: number
 }
 

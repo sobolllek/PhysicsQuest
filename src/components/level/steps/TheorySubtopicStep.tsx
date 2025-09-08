@@ -3,39 +3,49 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { QuestionComponent } from "../QuestionComponent"
-import { TheorySubtopic, TrainingQuestions, Question } from "@/types/level"
+import { TheorySubtopic, Question } from "@/types/level"
 import { hapticFeedback } from "@/lib/telegram"
 import { CheckCircle2, Target, BookOpen } from "lucide-react"
 
 interface TheorySubtopicStepProps {
   subtopics: TheorySubtopic[]
-  training?: TrainingQuestions
   onComplete: (score: number) => void
 }
 
-export function TheorySubtopicStep({ subtopics, training, onComplete }: TheorySubtopicStepProps) {
+export function TheorySubtopicStep({ subtopics, onComplete }: TheorySubtopicStepProps) {
   const [currentSubtopicIndex, setCurrentSubtopicIndex] = useState(0)
-  const [showTraining, setShowTraining] = useState(false)
+  const [isShowingTraining, setIsShowingTraining] = useState(false)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [userAnswers, setUserAnswers] = useState<{ [questionId: string]: any }>({})
   const [showResults, setShowResults] = useState(false)
+  const [completedSubtopics, setCompletedSubtopics] = useState<Set<number>>(new Set())
 
   const currentSubtopic = subtopics[currentSubtopicIndex]
+  const currentTraining = currentSubtopic.training
   const isLastSubtopic = currentSubtopicIndex === subtopics.length - 1
-  const questions = training?.questions || []
+  const questions = currentTraining?.questions || []
   const currentQuestion = questions[currentQuestionIndex]
   const progress = ((currentSubtopicIndex + 1) / subtopics.length) * 100
 
   const handleSubtopicComplete = () => {
-    if (isLastSubtopic && training) {
-      // Переходим к тренировке после последней подтемы
-      setShowTraining(true)
-    } else if (isLastSubtopic) {
-      // Завершаем теорию без тренировки
+    // После прочтения подтопика переходим к тренировке
+    setIsShowingTraining(true)
+  }
+
+  const handleTrainingComplete = () => {
+    // Отмечаем подтопик как пройденный
+    setCompletedSubtopics(prev => new Set([...prev, currentSubtopicIndex]))
+    
+    if (isLastSubtopic) {
+      // Если это последний подтопик, завершаем всю теорию
       onComplete(100)
     } else {
-      // Переходим к следующей подтеме
+      // Переходим к следующему подтопику
       setCurrentSubtopicIndex(currentSubtopicIndex + 1)
+      setIsShowingTraining(false)
+      setCurrentQuestionIndex(0)
+      setUserAnswers({})
+      setShowResults(false)
     }
   }
 
@@ -71,14 +81,18 @@ export function TheorySubtopicStep({ subtopics, training, onComplete }: TheorySu
 
   const handleFinish = () => {
     const score = calculateScore()
-    hapticFeedback('notification')
-    onComplete(score)
+    const passed = score >= (currentTraining?.passScore || 80)
+    
+    if (passed) {
+      hapticFeedback('notification')
+      handleTrainingComplete()
+    }
   }
 
-  if (showTraining) {
+  if (isShowingTraining) {
     if (showResults) {
       const score = calculateScore()
-      const passed = score >= (training?.passScore || 80)
+      const passed = score >= (currentTraining?.passScore || 80)
       
       return (
         <div className="space-y-6">
@@ -114,7 +128,7 @@ export function TheorySubtopicStep({ subtopics, training, onComplete }: TheorySu
               </div>
               
               <div className={`text-lg font-semibold ${passed ? 'text-success' : 'text-destructive'}`}>
-                {passed ? 'Тренировка пройдена!' : `Нужно минимум ${training?.passScore || 80}%`}
+                {passed ? 'Тренировка пройдена!' : `Нужно минимум ${currentTraining?.passScore || 80}%`}
               </div>
               
               {!passed && (
@@ -133,9 +147,15 @@ export function TheorySubtopicStep({ subtopics, training, onComplete }: TheorySu
             </CardContent>
           </Card>
 
-          <Button onClick={handleFinish} size="lg" className="w-full">
-            Продолжить
-          </Button>
+          {passed ? (
+            <Button onClick={handleFinish} size="lg" className="w-full">
+              {isLastSubtopic ? 'Завершить теорию' : 'К следующему параграфу'}
+            </Button>
+          ) : (
+            <Button onClick={handleFinish} size="lg" className="w-full" disabled>
+              Нужно набрать минимум {currentTraining?.passScore || 80}%
+            </Button>
+          )}
         </div>
       )
     }
@@ -151,7 +171,7 @@ export function TheorySubtopicStep({ subtopics, training, onComplete }: TheorySu
             <h2 className="text-lg font-semibold">Тренировка</h2>
           </div>
           <p className="text-sm text-muted-foreground">
-            Ответьте на вопросы по теории
+            {currentSubtopic.title}
           </p>
         </div>
 
@@ -233,8 +253,7 @@ export function TheorySubtopicStep({ subtopics, training, onComplete }: TheorySu
           size="lg"
           className="min-w-[150px] bg-gray-500 hover:bg-gray-600 text-white"
         >
-          {isLastSubtopic && training ? 'К тренировке' : 
-           isLastSubtopic ? 'Завершить теорию' : 'Продолжить'}
+          К тренировке
         </Button>
       </div>
     </div>

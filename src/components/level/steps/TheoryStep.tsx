@@ -14,7 +14,6 @@ export function TheoryStep({ step, onComplete }: TheoryStepProps) {
     return (
       <TheorySubtopicStep
         subtopics={step.subtopics}
-        training={step.training}
         onComplete={onComplete}
       />
     )

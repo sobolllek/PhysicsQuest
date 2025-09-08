@@ -4,7 +4,8 @@ import { useState } from "react"
 
 interface SubtopicProgress {
   title: string
-  completed: boolean
+  theoryCompleted: boolean
+  trainingCompleted: boolean
 }
 
 interface LevelProgress {
@@ -150,8 +151,10 @@ export function LevelNode({
               <>
                 {progress.subtopics.map((subtopic, index) => (
                   <div key={index} className="flex items-center justify-between">
-                    <span className="truncate">{subtopic.title}</span>
-                    {subtopic.completed ? <Check className="w-3 h-3 text-success" /> : <X className="w-3 h-3 text-destructive" />}
+                    <span className="truncate text-xs">{subtopic.title}</span>
+                    {subtopic.theoryCompleted && subtopic.trainingCompleted ? 
+                      <Check className="w-3 h-3 text-success" /> : 
+                      <X className="w-3 h-3 text-destructive" />}
                   </div>
                 ))}
               </>
