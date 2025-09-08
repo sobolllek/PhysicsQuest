@@ -96,26 +96,26 @@ export function PracticeStep({ step, onComplete }: PracticeStepProps) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pt-4">
       {/* Progress */}
-      <div className="space-y-2">
+      <div className="space-y-2 flex flex-col items-center">
         <div className="flex justify-between text-sm text-muted-foreground">
           <span>Вопрос {currentQuestionIndex + 1} из {questions.length}</span>
-          <span>Практика</span>
         </div>
-        <Progress value={progress} className="h-2" />
+        <Progress value={progress} className="h-2 w-1/2" />
       </div>
 
-      {/* Question */}
-      <QuestionComponent
-        question={currentQuestion}
-        userAnswer={userAnswers[currentQuestion.id]}
-        onAnswer={(answer) => handleAnswer(currentQuestion.id, answer)}
-        showExplanation={false}
-      />
+      <div className="mx-auto max-w-2xl px-4"> {/* Центрирование + отступы */}
+  <QuestionComponent
+    question={currentQuestion}
+    userAnswer={userAnswers[currentQuestion.id]}
+    onAnswer={(answer) => handleAnswer(currentQuestion.id, answer)}
+    showExplanation={false}
+  />
+</div>
 
       {/* Navigation */}
-      <div className="flex justify-end pt-4">
+      <div className="flex flex-col items-center pt-4">
         <Button 
           onClick={handleNext}
           disabled={!userAnswers[currentQuestion.id]}

@@ -142,9 +142,9 @@ export function QuestionComponent({
   }
 
   return (
-    <Card>
+    <Card className="bg-transparent border-0 shadow-none">
       <CardHeader>
-        <CardTitle className="text-lg leading-relaxed">
+        <CardTitle className="text-lg leading-relaxed text-center">
           {question.question}
           {showExplanation && (
             <span className={`ml-2 inline-flex items-center gap-1 text-sm ${

@@ -1,8 +1,4 @@
-import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { BookOpen, ArrowRight } from "lucide-react"
 import { LevelStep } from "@/types/level"
 import { hapticFeedback } from "@/lib/telegram"
 
@@ -12,14 +8,6 @@ interface TheoryStepProps {
 }
 
 export function TheoryStep({ step, onComplete }: TheoryStepProps) {
-  const [isRead, setIsRead] = useState(false)
-
-  const handleScroll = (e: any) => {
-    const { scrollTop, scrollHeight, clientHeight } = e.target
-    if (scrollTop + clientHeight >= scrollHeight - 50) {
-      setIsRead(true)
-    }
-  }
 
   const handleContinue = () => {
     hapticFeedback('selection')
@@ -27,53 +15,44 @@ export function TheoryStep({ step, onComplete }: TheoryStepProps) {
   }
 
   return (
-    <div className="space-y-6">
-      <Card className="border-primary/20">
-        <CardHeader className="text-center">
-          <CardTitle className="flex items-center justify-center gap-2">
-            <BookOpen className="w-6 h-6 text-primary" />
-            {step.title}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ScrollArea 
-            className="h-[60vh] pr-4" 
-            onScrollCapture={handleScroll}
-          >
-            <div 
-              className="prose prose-sm max-w-none text-foreground"
-              dangerouslySetInnerHTML={{ 
-                __html: step.content?.replace(/\n/g, '<br/>') || '' 
-              }}
-            />
-          </ScrollArea>
-        </CardContent>
-      </Card>
+    <div className="space-y-6 relative">
+      <div className="relative">
+        <div 
+          className="prose prose-sm max-w-none text-foreground mt-2 px-4 pb-20"
+          dangerouslySetInnerHTML={{ 
+            __html: step.content?.replace(/\n/g, '<br/>') || '' 
+          }}
+        />
 
-      {/* Continue button */}
-      <div className="flex justify-center pt-4">
-        <Button 
-          onClick={handleContinue}
-          disabled={!isRead}
-          size="lg"
-          className="min-w-[200px]"
-        >
-          {isRead ? (
-            <>
-              Продолжить
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </>
-          ) : (
-            "Прочитайте до конца"
-          )}
-        </Button>
+        {/* Верхний фиксированный градиент */}
+        <div 
+          className="fixed top-0 left-0 right-0 h-[170px] pointer-events-none"
+          style={{
+            background: 'linear-gradient(to bottom, rgba(255, 255, 255, 1) 130px, rgba(255, 255, 255, 0) 200px)',
+            zIndex: 10,
+          }}
+        />
+
+        {/* Нижний фиксированный градиент */}
+        <div 
+          className="fixed bottom-0 left-0 right-0 h-[170px] pointer-events-none"
+          style={{
+            background: 'linear-gradient(to top, rgba(255, 255, 255, 1) 10px, rgba(255, 255, 255, 0) 130px)',
+            zIndex: 10,
+          }}
+        />
       </div>
 
-      {!isRead && (
-        <p className="text-center text-sm text-muted-foreground">
-          Прокрутите до конца, чтобы продолжить
-        </p>
-      )}
+      {/* Кнопка "Продолжить" всегда активна */}
+      <div className="fixed bottom-5 left-0 right-0 flex justify-center" style={{ zIndex: 20 }}>
+        <Button 
+          onClick={handleContinue}
+          size="lg"
+          className="min-w-[150px] bg-gray-500 hover:bg-gray-600 text-white"
+        >
+          Продолжить к тренировке
+        </Button>
+      </div>
     </div>
   )
 }
