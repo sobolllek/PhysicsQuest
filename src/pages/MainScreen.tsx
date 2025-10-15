@@ -88,7 +88,7 @@ export default function MainScreen({ onLevelClick, levelProgress }: MainScreenPr
           <h1 className="text-3xl font-bold text-white">
             {displayedSectionTitle || "Physics Quest"}
           </h1>
-          <PhysicsIcon />
+          <PhysicsIcon className="text-white"/>
         </div>
 
         {/* Content with padding to avoid overlap with fixed header */}

@@ -16,6 +16,7 @@ const Index = () => {
     1: { theory: true, practice: false, validation: false, controlTest: false },
     2: { theory: false, practice: false, validation: false, controlTest: false }
   })
+  const [isInSubScreen, setIsInSubScreen] = useState(false)  // Новое состояние для подэкранов
 
   useEffect(() => {
     // Initialize Telegram Web App
@@ -66,7 +67,7 @@ const Index = () => {
       case 'main':
         return <MainScreen onLevelClick={handleLevelClick} levelProgress={levelProgress} />
       case 'theory':
-        return <TheoryScreen />
+        return <TheoryScreen setIsInSubScreen={setIsInSubScreen} />  // Передача пропса
       case 'achievements':
         return <AchievementsScreen />
       case 'profile':
@@ -79,8 +80,8 @@ const Index = () => {
   return (
     <div className="h-full bg-background">
       {renderScreen()}
-      {/* Hide tab navigation when in level */}
-      {!currentLevel && (
+      {/* Hide tab navigation when in level or sub-screen */}
+      {!currentLevel && !isInSubScreen && (
         <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
       )}
     </div>

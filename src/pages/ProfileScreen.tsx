@@ -23,23 +23,23 @@ export default function ProfileScreen() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-space pb-20">
+    <div className="min-h-screen bg-gradient-to-b from-white to-[#e2e9eeff] pb-20">
       <div className="relative z-10">
         {/* Fixed Header with Top-Left Title and Icon on the right side */}
         <div className="fixed top-24 left-6 right-6 z-20 flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-white">
+          <h1 className="text-3xl font-bold text-gray-600">
             Профиль
           </h1>
-          <PhysicsIcon />
+          <PhysicsIcon className="text-gray-600"/>
         </div>
 
         {/* Content with padding to avoid overlap with fixed header */}
         <div className="pt-40 px-6">
           {/* Profile Card */}
           <div className="mb-6">
-            <Card className="p-6 bg-gradient-cosmic border-none text-primary-foreground">
+            <Card className="p-6 bg-gray-400 border-none text-primary-foreground">
               <div className="flex items-center gap-4 mb-4">
-                <Avatar className="w-16 h-16 bg-primary-foreground/20">
+                <Avatar className="w-16 h-16 bg-primary-foreground/20 lex items-center justify-center">
                   <User className="w-8 h-8 text-primary-foreground" />
                 </Avatar>
                 <div className="flex-1">
@@ -48,9 +48,6 @@ export default function ProfileScreen() {
                     <Badge variant="secondary" className="bg-primary-foreground/20 text-primary-foreground border-none">
                       {userProfile.rank}
                     </Badge>
-                    <span className="text-primary-foreground/80 text-sm">
-                      С {userProfile.joinDate}
-                    </span>
                   </div>
                 </div>
               </div>
@@ -90,21 +87,6 @@ export default function ProfileScreen() {
                 </Card>
               ))}
             </div>
-          </div>
-
-          {/* Menu Options */}
-          <div className="space-y-2">
-            <h3 className="text-lg font-semibold text-foreground mb-4">Меню</h3>
-            
-            <Button variant="ghost" className="w-full justify-start h-12">
-              <Settings className="w-5 h-5 mr-3" />
-              Настройки
-            </Button>
-            
-            <Button variant="ghost" className="w-full justify-start h-12">
-              <HelpCircle className="w-5 h-5 mr-3" />
-              Помощь
-            </Button>
           </div>
         </div>
       </div>
